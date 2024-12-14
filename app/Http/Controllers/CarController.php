@@ -61,20 +61,21 @@ class CarController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(int $id)
+    public function show(Car $car)
     {
-        $carDetails = $this->carsService->findCarDetails($id);
+        $carDetails = $this->carsService->findCarDetails($car->id);
         return view('car.show',['car'=>$carDetails->car, 'carCount'=>$carDetails->carCount, 'images'=> $carDetails->images]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(int $id)
+    public function edit(Car $car)
     {
-        $car = $this->carsService->findCar($id);
+        $car = $this->carsService->findCar($car->id);
         $carInfo = $this->carsService->fetchCarInfo();
         $years = $this->carsService->getYears();
+
         return view('car.edit',[
             'car'=>$car,
             'carTypes'=> $carInfo->carTypes,
@@ -90,9 +91,9 @@ class CarController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateCarRequest $request, int $id)
+    public function update(UpdateCarRequest $request, Car $car)
     {
-        $this->carsService->update($request->all(), $id);
+        $this->carsService->update($request->all(), $car->id);
         return redirect()
             ->route('car.index')
             ->with('success', 'Car successfully updated!');
