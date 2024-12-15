@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 
 use App\Http\Requests\Car\UpdateCarRequest;
+use App\Mail\CarBought;
 use App\Models\Car;
 use App\Services\CarServiceInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 
 class CarController extends Controller
@@ -154,5 +156,12 @@ class CarController extends Controller
     {
         $cars = $this->carsService->findUsersFavouriteCars(5,5);
         return view('car.watchlist',['cars'=>$cars]);
+    }
+
+    public function buyCar(Car $car)
+    {
+        Mail::to(Auth::user())->queue(
+            new CarBought($car)
+        );
     }
 }
